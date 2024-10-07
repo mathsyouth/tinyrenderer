@@ -22,21 +22,31 @@ void line(int x0, int y0, int x1, int y1, TGAImage &image, TGAColor color)
     int derror2 = std::abs(dy) * 2;
     int error2 = 0;
     int y = y0;
-    for (int x=x0; x <= x1; x++)
+    const int yinc = (y1 > y0? 1 : -1);
+    if (steep)
     {
-        if (steep)
+        for (int x=x0; x <= x1; x++)
         {
             image.set(y, x, color);
+            error2 += derror2;
+            if (error2 > dx)
+            {
+                y += yinc;
+                error2 -= dx * 2;
+            }
         }
-        else
+    }
+    else
+    {
+        for (int x=x0; x <= x1; x++)
         {
             image.set(x, y, color);
-        }
-        error2 += derror2;
-        if (error2 > dx)
-        {
-            y += (y1 > y0? 1 : -1);
-            error2 -= dx * 2;
+            error2 += derror2;
+            if (error2 > dx)
+            {
+                y += yinc;
+                error2 -= dx * 2;
+            }
         }
     }
 }
